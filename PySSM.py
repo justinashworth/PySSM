@@ -31,7 +31,6 @@ import FileDialog
 from PySSM_lib import *
 # non-Tkinter class are in PySSM_classes.py
 from PySSM_classes import *
-from AshworthUtil import *
 
 from optparse import OptionParser
 p = OptionParser()

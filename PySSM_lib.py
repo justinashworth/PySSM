@@ -3,12 +3,77 @@
 # variable and function library for PySSM
 
 # Justin Ashworth, University of Washington, 2006
-from AshworthUtil import *
+
+import re, string
 
 dna_filter = re.compile( "[^acgtACGT]" )
 ENSE_Intron = re.compile( "(ENSE|Intron)" )
 
+bases = ['a','c','g','t']
 bases_uppercase = ['A','C','G','T']
+nucs = ['a','c','g','t','n']
+
+comp = {
+	'A':'T',
+	'C':'G',
+	'G':'C',
+	'T':'A',
+	'a':'t',
+	'c':'g',
+	'g':'c',
+	't':'a',
+#	'n':'n', # use compbase if other characters are expected
+#	'N':'N',
+}
+
+def compbase(char):
+	try: return comp[char]
+	except: return char
+
+def baserecurse( dec, places, base ):
+	fact = dec/base
+	nextplace = 0
+	while nextplace < fact:
+		nextplace += 1
+		dec -= base
+	places.append( dec )
+	if nextplace > base-1: hexrecurse( nextplace, places )
+	else: places.append( nextplace )
+
+def rvs_comp_str(seq):
+	return string.join([ compbase(base) for base in reversed(seq) ], '' )
+
+def regex_remove( regex, string ):
+	if regex.search( string ): return False
+	return True
+
+def regex_filter( regex, string ):
+	return regex.sub( '', string )
+
+def stringf_left( string, length ):
+	slen = len(string)
+	if slen > length: return string
+	for i in range( length - slen ): string += ' '
+	return string
+
+def diff_fwd( str1, str2 ):
+	if ( len(str1) - len(str2) ) != 0: return -1
+	count = 0
+	for i in range( len( str1 ) ):
+		if str1[i] != str2[i]: count += 1
+	return count
+
+def diff_rvs( str1, str2 ):
+	return diff_fwd( str1, rvs_comp_str(str2) )
+
+def mark_mismatches( query, ref ):
+	marked = ''
+	for i in range( len(query) ):
+		# case-insensitive w/ respect to the reference
+		if query[i] == string.lower(ref[i]) or query[i] == string.upper(ref[i]):
+			marked += string.upper(query[i])
+		else: marked += string.lower(query[i])
+	return marked
 
 def sort_2D_1up(a,b):
 	if a[0] < b[0]: return -1
@@ -32,6 +97,13 @@ def dict_rvs( dict ):
 	for key,val in dict.items():
 		rvs[ val ] = key
 	return rvs
+
+def dec2hex( dec ):
+	hex = [ str(i) for i in range(10) ]
+	hex.extend( ['a','b','c','d','e','f'] )
+	places = []
+	baserecurse( dec, places, 16 )
+	return string.join( [ hex[place] for place in reversed(places) ], '' )
 
 def make_colors( difs, hitseq, annotations, positions, positive, negative, colormode ):
 

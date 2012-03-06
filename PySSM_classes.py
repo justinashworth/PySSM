@@ -5,7 +5,6 @@
 # non-Tkinter classes used by PySSM
 
 from PySSM_lib import *
-from AshworthUtil import *
 from Tkinter import END
 import re,string
 
