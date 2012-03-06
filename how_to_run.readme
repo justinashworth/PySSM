@@ -1,0 +1,21 @@
+PySSM has been tested on:
+	linux (Justin Ashworth)
+	mac (Summer Thyme)
+
+To Run:
+1. python installed
+2. Tk graphical interface libraries installed (if you don't know, assume for now that they are)
+2. in a terminal, execute 'python PySSM.py' in this directory to start up the program
+
+To run the program from anywhere, move the .py program files to a directory of your choice, and make sure that the environment variable 'PYTHONPATH' is set to a directory that is a parent of this chosen directory (e.g. put *.py in ~/scripts or ~/scripts/PySSM, and set PYTHONPATH=$HOME/scripts)
+
+Necessary files:
+	pssm file (see example file)
+	wildtype site sequence file - one line no spaces, same length as number of positions in pssm (see example file)
+	sequence file to search (FASTA format)
+
+Optional files:
+	file indicating position/bases (e.g. "-9 A") that should be lower-cased in hits (such as substitutions requiring design). file extension should be .annotations
+
+Options:
+	-i inverts the scores (flips sign) on loaded pssm (in PySSM, negative scores are better)
